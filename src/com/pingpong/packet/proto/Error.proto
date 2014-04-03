@@ -1,0 +1,6 @@
+package com.pingpong.packet.gen;
+
+message ErrorPacket {
+    required int32 code = 1;
+    required string descr = 2;
+}

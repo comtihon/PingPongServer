@@ -1,0 +1,5 @@
+package com.pingpong.packet.gen;
+
+message PongPacket {
+    required string responce = 1;
+}

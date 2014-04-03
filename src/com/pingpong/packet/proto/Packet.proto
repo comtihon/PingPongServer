@@ -1,0 +1,15 @@
+package com.pingpong.packet.gen;
+
+message FullPacket {
+
+    enum PacketType {
+        Ping = 0;
+        Pong = 1;
+        Error = 2;
+    }
+
+    required PacketType type = 1;
+    required int32 protocol = 2;
+    required int32 apiVersion = 3;
+    required bytes packet = 4;
+}
