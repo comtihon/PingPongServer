@@ -25,6 +25,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullPacket> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         sendError(400, "Unknown packet type or damaged packet!", ctx);
+        ctx.flush();
         ctx.close();
     }
 
@@ -51,6 +52,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullPacket> {
                 .setApiVersion(currentProtocolVersion)
                 .setPacket(error.toByteString())
                 .build();
+
+        byte[] bytes = packet.toByteArray();
+        System.out.print("[");
+        for(byte b : bytes)
+            System.out.printf("%d", b);
+        System.out.printf("] %d\n", bytes.length);
+
         channel.write(packet);
     }
 }
