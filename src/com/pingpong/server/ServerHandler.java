@@ -1,6 +1,8 @@
 package com.pingpong.server;
 
 import com.pingpong.core.Logger;
+import com.pingpong.manager.RequestManager;
+import com.pingpong.model.Request;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -12,14 +14,15 @@ import static com.pingpong.packet.gen.Packet.FullPacket;
  */
 public class ServerHandler extends SimpleChannelInboundHandler<FullPacket> {
 
-    private final int minApiVersion;
     private final int minProtocolVersion;
+    private final int minApiVersion;
     private final int currentProtocolVersion;
 
     public ServerHandler() {
-        minApiVersion = Integer.valueOf(Config.getInstance().getProperty("min_support_api", "1"));
-        currentProtocolVersion = Integer.valueOf(Config.getInstance().getProperty("current_protocol_version", "1"));
-        minProtocolVersion = Integer.valueOf(Config.getInstance().getProperty("minimal_protocol_version", "1"));
+        Server server = Server.getInstance();
+        minApiVersion = server.getMinApiVersion();
+        minProtocolVersion = server.getMinProtocolVersion();
+        currentProtocolVersion = server.getCurrentProtocolVersion();
     }
 
     @Override
@@ -36,7 +39,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullPacket> {
             ctx.close();
             return;
         }
-        System.out.println("Got " + msg.getApiVersion());
+        Request request = new Request(msg, ctx);
+        RequestManager.getInstance().addToQueue(request);
     }
 
     private void sendError(int code, String message, ChannelHandlerContext channel) {
@@ -52,13 +56,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullPacket> {
                 .setApiVersion(currentProtocolVersion)
                 .setPacket(error.toByteString())
                 .build();
-
-        byte[] bytes = packet.toByteArray();
-        System.out.print("[");
-        for(byte b : bytes)
-            System.out.printf("%d", b);
-        System.out.printf("] %d\n", bytes.length);
-
         channel.write(packet);
     }
 }

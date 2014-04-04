@@ -173,40 +173,40 @@ public final class Packet {
     public enum PacketType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
-       * <code>Ping = 0;</code>
+       * <code>Ping = 1;</code>
        */
-      Ping(0, 0),
+      Ping(0, 1),
       /**
-       * <code>Pong = 1;</code>
+       * <code>Pong = 2;</code>
        */
-      Pong(1, 1),
+      Pong(1, 2),
       /**
-       * <code>Error = 2;</code>
+       * <code>Error = 3;</code>
        */
-      Error(2, 2),
+      Error(2, 3),
       ;
 
       /**
-       * <code>Ping = 0;</code>
+       * <code>Ping = 1;</code>
        */
-      public static final int Ping_VALUE = 0;
+      public static final int Ping_VALUE = 1;
       /**
-       * <code>Pong = 1;</code>
+       * <code>Pong = 2;</code>
        */
-      public static final int Pong_VALUE = 1;
+      public static final int Pong_VALUE = 2;
       /**
-       * <code>Error = 2;</code>
+       * <code>Error = 3;</code>
        */
-      public static final int Error_VALUE = 2;
+      public static final int Error_VALUE = 3;
 
 
       public final int getNumber() { return value; }
 
       public static PacketType valueOf(int value) {
         switch (value) {
-          case 0: return Ping;
-          case 1: return Pong;
-          case 2: return Error;
+          case 1: return Ping;
+          case 2: return Pong;
+          case 3: return Error;
           default: return null;
         }
       }
@@ -800,8 +800,8 @@ public final class Packet {
       "\255\001\n\nFullPacket\022<\n\004type\030\001 \002(\0162..com.pingp" +
       "ong.packet.gen.FullPacket.PacketType\022\020\n\010" +
       "protocol\030\002 \002(\005\022\022\n\napiVersion\030\003 \002(\005\022\016\n\006pa" +
-      "cket\030\004 \002(\014\"+\n\nPacketType\022\010\n\004Ping\020\000\022\010\n\004Po" +
-      "ng\020\001\022\t\n\005Error\020\002"
+      "cket\030\004 \002(\014\"+\n\nPacketType\022\010\n\004Ping\020\001\022\010\n\004Po" +
+      "ng\020\002\022\t\n\005Error\020\003"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
