@@ -1,7 +1,9 @@
 package com.pingpong.server;
 
-import com.pingpong.cache.Cache;
+import com.pingpong.job.DataLoaderJob;
+import com.pingpong.manager.CacheManager;
 import com.pingpong.core.Logger;
+import com.pingpong.manager.DatabaseManager;
 import com.pingpong.manager.RequestManager;
 import com.pingpong.packet.gen.Packet;
 import io.netty.bootstrap.ServerBootstrap;
@@ -101,16 +103,24 @@ public class Server {
         RequestManager.getInstance();   //construct manager
 
         try {
-            Cache.init();
-            Server server = Server.getInstance();
+            DatabaseManager.getInstance();  //try init database
+        }catch (Exception e) {
+            Logger.e("Database inactive, use cache-only. Reason: " + e.getMessage());
+        }
+
+        try {
+            CacheManager.init();    //init cache
+            Server server = Server.getInstance();   //init server
+            DataLoaderJob.getInstance().start();    //starts job ping collector
             Logger.i(":::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             Logger.i("Starting server on port %d. ", server.getPort());
             Logger.i("Protocol version = %d", server.getCurrentProtocolVersion());
             Logger.i("Minimal supported protocol version = %d", server.getMinProtocolVersion());
             Logger.i("Minimal supported api version = %d", server.getMinApiVersion());
             Logger.i(":::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-            server.run();
-            Cache.shutdown();
+            server.run();   //blocking operation - waits, wile server works
+            CacheManager.shutdown();   //shutdown cache
+            DatabaseManager.getInstance().stopClient(); //
         } catch (Exception e) {
             Logger.e(e.getMessage());
         }

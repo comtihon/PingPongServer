@@ -5,7 +5,9 @@ package com.pingpong.cache;
  */
 public interface CacheImplementation {
 
-    public long incr(String key, int value);
+    public long incr(String key);
+
+    public long getAndClear(String key);
 
     public void shutdown();
 }

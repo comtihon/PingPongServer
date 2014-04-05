@@ -32,8 +32,13 @@ public class RedissonImpl implements CacheImplementation {
     }
 
     @Override
-    public long incr(String key, int value) {
+    public long incr(String key) {
         return redisson.getAtomicLong(key).incrementAndGet();
+    }
+
+    @Override
+    public long getAndClear(String key) {
+        return redisson.getAtomicLong(key).getAndSet(0);
     }
 
     @Override

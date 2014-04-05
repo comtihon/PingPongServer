@@ -104,6 +104,11 @@
             <version>1.0.3</version>
         </dependency>
         <dependency>
+            <groupId>io.orchestrate</groupId>
+            <artifactId>orchestrate-client</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.9</version>
