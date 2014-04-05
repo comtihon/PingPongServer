@@ -2,4 +2,5 @@ package com.pingpong.packet.gen;
 
 message PingPacket {
     required string request = 1;
+    required string uid = 2;
 }

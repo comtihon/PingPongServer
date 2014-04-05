@@ -1,5 +1,6 @@
 package com.pingpong.server;
 
+import com.pingpong.cache.Cache;
 import com.pingpong.core.Logger;
 import com.pingpong.manager.RequestManager;
 import com.pingpong.packet.gen.Packet;
@@ -100,6 +101,7 @@ public class Server {
         RequestManager.getInstance();   //construct manager
 
         try {
+            Cache.init();
             Server server = Server.getInstance();
             Logger.i(":::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             Logger.i("Starting server on port %d. ", server.getPort());
@@ -108,6 +110,7 @@ public class Server {
             Logger.i("Minimal supported api version = %d", server.getMinApiVersion());
             Logger.i(":::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             server.run();
+            Cache.shutdown();
         } catch (Exception e) {
             Logger.e(e.getMessage());
         }

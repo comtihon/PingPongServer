@@ -1,5 +1,7 @@
 package com.pingpong.controller;
 
+import com.pingpong.cache.Cache;
+import com.pingpong.core.Logger;
 import com.pingpong.model.Request;
 import com.pingpong.packet.gen.Packet;
 
@@ -23,10 +25,15 @@ public class PingController {
         }
 
         if (ping.getRequest().equals("Ping")) {
+
+            String uid = ping.getUid();
+            if (uid == null)
+                uid = "";
+
             PongPacket packet = PongPacket.newBuilder()
-                    .setResponce("Pong N")
+                    .setResponce("Pong " + Cache.incr(uid))
                     .build();
-            System.out.println("Sending Pong");
+            Logger.i("Sending " + packet.getResponce() + " to " + uid);
             request.sendResponse(packet.toByteString(), Packet.FullPacket.PacketType.Pong);
         } else {
             ErrorPacket error = ErrorPacket.newBuilder()
