@@ -20,6 +20,10 @@ public class CacheManager {
         return cacheImpl.incr(key);
     }
 
+    public static long incr(String key, long value) {
+        return cacheImpl.incr(key, value);
+    }
+
     public static long getAndClear(String key) {
         return cacheImpl.getAndClear(key);
     }

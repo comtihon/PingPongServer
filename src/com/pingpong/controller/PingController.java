@@ -60,8 +60,14 @@ public class PingController {
     private static long getPingValue(String uid) {
         DatabaseManager.getInstance().addPinger(uid);   //add connected pinger to synchronisation array
         long result = CacheManager.incr(uid);  //get result from cache
+        Logger.d("Result is " + result);
         if (result == 1) {  //cache record is new. Search database for old ping values
-            result += DatabaseManager.getInstance().getPingValue(uid);
+            long pingsFromDb = DatabaseManager.getInstance().getPingValue(uid);
+            Logger.d("pings from db  " + pingsFromDb);
+            if (pingsFromDb > 0) {
+                CacheManager.incr(uid, pingsFromDb + 1);    //updates cache with database info
+                result += pingsFromDb;
+            }
         }
         return result;
     }

@@ -1,5 +1,6 @@
 package com.pingpong.manager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pingpong.core.Logger;
 import com.pingpong.server.Config;
 import io.orchestrate.client.*;
@@ -61,16 +62,16 @@ public class DatabaseManager {
     public long getPingValue(String key) {
         if (pingerCollection == null || key == null)
             return 0;
-        KvFetchOperation<Long> kvFetchOp = new KvFetchOperation<>(pingerCollection, key, Long.class);
+        KvFetchOperation<String> kvFetchOp = new KvFetchOperation<>(pingerCollection, key, String.class);
 
-        Future<KvObject<Long>> kvObjectFuture = client.execute(kvFetchOp);  // execute the operation
-        KvObject<Long> kvObject = null;
+        Future<KvObject<String>> kvObjectFuture = client.execute(kvFetchOp);  // execute the operation
+        KvObject<String> kvObject = null;
         try {
             kvObject = kvObjectFuture.get(3, TimeUnit.SECONDS);  // wait for the result
         } catch (Exception e) {
             Logger.w("Error during waiting for Orchestrate. Reason:" + e.getMessage());
         }
-        return kvObject == null ? 0 : kvObject.getValue();
+        return kvObject == null ? 0 : fromJson(kvObject.getValue());
     }
 
     /**
@@ -79,16 +80,32 @@ public class DatabaseManager {
      * @param key   Pinger's uid
      * @param value number of pings from cache
      */
-    public void setPingValue(String key, Long value) {
+    public void setPingValue(String key, long value) {
         if (client == null)
             return;
-        KvStoreOperation kvStoreOp = new KvStoreOperation(pingerCollection, key, value);
+        KvStoreOperation kvStoreOp = new KvStoreOperation(pingerCollection, key, toJson(value));
         client.execute(kvStoreOp);    // execute the operation
+
+        // execute the operation
+        client.execute(kvStoreOp);
     }
 
     public void stopClient() throws IOException {
         if (client != null)
             client.stop();
+    }
+
+    private String toJson(long value) {
+        return "{\"ping\":" + value + "}";
+    }
+
+    private long fromJson(String json) {
+        try {
+            return new ObjectMapper().readTree(json).get("ping").asLong();
+        } catch (IOException e) {
+            Logger.w("Can't parse json: " + json + " Reason : " + e.getMessage());
+            return 0;
+        }
     }
 
 }
