@@ -25,6 +25,21 @@ public final class Ping {
      */
     com.google.protobuf.ByteString
         getRequestBytes();
+
+    // required string uid = 2;
+    /**
+     * <code>required string uid = 2;</code>
+     */
+    boolean hasUid();
+    /**
+     * <code>required string uid = 2;</code>
+     */
+    java.lang.String getUid();
+    /**
+     * <code>required string uid = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getUidBytes();
   }
   /**
    * Protobuf type {@code com.pingpong.packet.gen.PingPacket}
@@ -80,6 +95,11 @@ public final class Ping {
             case 10: {
               bitField0_ |= 0x00000001;
               request_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              uid_ = input.readBytes();
               break;
             }
           }
@@ -165,8 +185,52 @@ public final class Ping {
       }
     }
 
+    // required string uid = 2;
+    public static final int UID_FIELD_NUMBER = 2;
+    private java.lang.Object uid_;
+    /**
+     * <code>required string uid = 2;</code>
+     */
+    public boolean hasUid() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string uid = 2;</code>
+     */
+    public java.lang.String getUid() {
+      java.lang.Object ref = uid_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          uid_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string uid = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUidBytes() {
+      java.lang.Object ref = uid_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        uid_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       request_ = "";
+      uid_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -174,6 +238,10 @@ public final class Ping {
       if (isInitialized != -1) return isInitialized == 1;
 
       if (!hasRequest()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasUid()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -187,6 +255,9 @@ public final class Ping {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeBytes(1, getRequestBytes());
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getUidBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -199,6 +270,10 @@ public final class Ping {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(1, getRequestBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getUidBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -318,6 +393,8 @@ public final class Ping {
         super.clear();
         request_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
+        uid_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -350,6 +427,10 @@ public final class Ping {
           to_bitField0_ |= 0x00000001;
         }
         result.request_ = request_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.uid_ = uid_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -371,12 +452,21 @@ public final class Ping {
           request_ = other.request_;
           onChanged();
         }
+        if (other.hasUid()) {
+          bitField0_ |= 0x00000002;
+          uid_ = other.uid_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasRequest()) {
+          
+          return false;
+        }
+        if (!hasUid()) {
           
           return false;
         }
@@ -476,6 +566,80 @@ public final class Ping {
         return this;
       }
 
+      // required string uid = 2;
+      private java.lang.Object uid_ = "";
+      /**
+       * <code>required string uid = 2;</code>
+       */
+      public boolean hasUid() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string uid = 2;</code>
+       */
+      public java.lang.String getUid() {
+        java.lang.Object ref = uid_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          uid_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string uid = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUidBytes() {
+        java.lang.Object ref = uid_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          uid_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string uid = 2;</code>
+       */
+      public Builder setUid(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        uid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string uid = 2;</code>
+       */
+      public Builder clearUid() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        uid_ = getDefaultInstance().getUid();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string uid = 2;</code>
+       */
+      public Builder setUidBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        uid_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:com.pingpong.packet.gen.PingPacket)
     }
 
@@ -501,8 +665,9 @@ public final class Ping {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nPing.proto\022\027com.pingpong.packet.gen\"\035\n" +
-      "\nPingPacket\022\017\n\007request\030\001 \002(\t"
+      "\n\nPing.proto\022\027com.pingpong.packet.gen\"*\n" +
+      "\nPingPacket\022\017\n\007request\030\001 \002(\t\022\013\n\003uid\030\002 \002(" +
+      "\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -514,7 +679,7 @@ public final class Ping {
           internal_static_com_pingpong_packet_gen_PingPacket_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_com_pingpong_packet_gen_PingPacket_descriptor,
-              new java.lang.String[] { "Request", });
+              new java.lang.String[] { "Request", "Uid", });
           return null;
         }
       };

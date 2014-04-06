@@ -26,7 +26,7 @@ public class Logger {
      * @return who called the logger
      */
     private static String getCallerClassName() {
-        final int level = 5;
+        final int level = 3;
         StackTraceElement[] callStack = Thread.currentThread().getStackTrace();
         StackTraceElement caller = callStack[level];
         return caller.getClassName();

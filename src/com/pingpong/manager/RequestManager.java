@@ -18,7 +18,6 @@ import static com.pingpong.packet.gen.Packet.FullPacket.PacketType;
 public class RequestManager {
 
     private static final long KEEP_ALIVE_TIME = 1L;
-    private static final int DEFAULT_IDLE_CONNECTION_TIMEOUT_IN_MS = 1500;
 
     private static class SingletonHolder {
         private static final RequestManager instance = new RequestManager();
