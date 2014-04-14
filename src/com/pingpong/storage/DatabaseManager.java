@@ -46,10 +46,7 @@ public class DatabaseManager extends Storage {
     public DatabaseManager(StorageInt component) {
         super(component);
         String apiKey = Config.getInstance().getProperty("db_api_key");
-        pingerCollection = Config.getInstance().getProperty("db_ping_collection");
-        if (apiKey == null || apiKey.isEmpty()
-                || pingerCollection == null || pingerCollection.isEmpty())
-            throw new RuntimeException("Orchestrate db is not configured correctly!");
+        pingerCollection = Config.getInstance().getProperty("db_ping_collection", "Pingers");
         client = new ClientBuilder(apiKey).build();
     }
 
@@ -60,9 +57,6 @@ public class DatabaseManager extends Storage {
      */
     @Override
     public void savePingValue(String key) {
-        if (client == null)
-            return;
-
         long value = super.getAndClear(key);
 
         Logger.i("Save %d for %s to DB", value, key);

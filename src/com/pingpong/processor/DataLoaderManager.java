@@ -21,16 +21,14 @@ public class DataLoaderManager implements LoaderProcessor {
 
     @Override
     public void syncCache() {
-        if (pingers != null) {
-            List<String> clearList = new ArrayList<>();
-            Iterator<String> it = pingers.iterator();
-            while (it.hasNext()) {
-                String uid = it.next();
-                ProcessorContainer.getStorateProcessor().savePingValue(uid);    //move number of pings from cache to database
-                clearList.add(uid);
-            }
-            pingers.removeAll(clearList);   //remove copied from list
+        List<String> clearList = new ArrayList<>();
+        Iterator<String> it = pingers.iterator();
+        while (it.hasNext()) {
+            String uid = it.next();
+            ProcessorContainer.getStorateProcessor().savePingValue(uid);    //move number of pings from cache to database
+            clearList.add(uid);
         }
+        pingers.removeAll(clearList);   //remove copied from list
     }
 
     /**

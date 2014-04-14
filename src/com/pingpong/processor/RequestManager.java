@@ -35,9 +35,6 @@ public class RequestManager implements RequestsProcessor {
 
     @Override
     public void addRequest(final Request packet) {
-        if (packet == null) {
-            return;
-        }
         try {
             poolExecutor.execute(packet);
         } catch (RejectedExecutionException re) {
@@ -57,8 +54,6 @@ public class RequestManager implements RequestsProcessor {
 
     @Override
     public void removeRequest(final Request packet) {
-        if (packet != null) {
-            poolExecutor.remove(packet);
-        }
+        poolExecutor.remove(packet);
     }
 }
