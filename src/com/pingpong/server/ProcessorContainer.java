@@ -1,9 +1,6 @@
 package com.pingpong.server;
 
-import com.pingpong.processor.DataLoaderManager;
-import com.pingpong.processor.LoaderProcessor;
-import com.pingpong.processor.RequestManager;
-import com.pingpong.processor.RequestsProcessor;
+import com.pingpong.processor.*;
 import com.pingpong.storage.*;
 
 /**
@@ -13,6 +10,7 @@ public class ProcessorContainer {
 
     private static RequestsProcessor reqProc;
     private static LoaderProcessor loadProc;
+    private static ControllerProcessor contProc;
     private static Storage storProc;
 
     public static RequestsProcessor getRequestsProcessor() {
@@ -25,6 +23,12 @@ public class ProcessorContainer {
         if (loadProc == null)
             loadProc = new DataLoaderManager();
         return loadProc;
+    }
+
+    public static ControllerProcessor getControllerProcessor() {
+        if(contProc == null)
+            contProc = new RouteControllerProcessor();
+        return contProc;
     }
 
     public static Storage getStorateProcessor() {

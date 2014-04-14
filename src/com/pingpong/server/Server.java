@@ -97,6 +97,7 @@ public class Server {
         Config conf = Config.getInstance();
         conf.initServerConf();
         conf.initLoggerConf();
+        conf.initControllerConf();
 
         try {
             Server server = Server.getInstance();   //init server

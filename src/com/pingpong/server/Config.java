@@ -4,9 +4,14 @@ import com.pingpong.core.Logger;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -55,6 +60,32 @@ public class Config extends Properties {
             Logger.i("Loglevel was set to: %s", logLevel);
         } catch (Exception e) {
             Logger.w("./log4j.properties does not exists in current dir, use default values");
+        }
+    }
+
+    public void initControllerConf() {
+        try {
+            String routes = getProperty("routes_conf_file", "conf/routes.json");
+            byte[] encoded = Files.readAllBytes(Paths.get(routes));
+            String config = new String(encoded, Charset.defaultCharset());
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode controllers = mapper.readTree(config);
+
+            for (JsonNode controller : controllers) {
+                try {
+                    String packetName = controller.get("packet_name").getTextValue();
+                    String className = controller.get("controller_name").getTextValue();
+                    String methodName = controller.get("method_name").getTextValue();
+
+                    ProcessorContainer.getControllerProcessor().addController(packetName, className, methodName);
+                } catch (Exception e) {
+                    Logger.w("Can't add controller: " + controller + "\n : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            Logger.e(e.getMessage());
         }
     }
 }

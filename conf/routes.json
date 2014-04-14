@@ -1,0 +1,7 @@
+[
+    {
+        "packet_name" : "Ping",
+         "controller_name" : "PingController",
+         "method_name" : "processPing"
+    }
+]
