@@ -4,10 +4,10 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.pingpong.core.Logger;
 import com.pingpong.manager.PacketManager;
-import com.pingpong.manager.RequestManager;
 import com.pingpong.packet.gen.Error;
 import com.pingpong.packet.gen.Packet;
 import com.pingpong.packet.gen.Ping;
+import com.pingpong.server.ProcessorContainer;
 import com.pingpong.server.Server;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -46,7 +46,7 @@ public class Request implements Runnable {
             sendResponse(error.toByteString(), PacketType.Error);
         }
 
-        RequestManager.getInstance().removeFromQueue(this);
+        ProcessorContainer.getRequestsProcessor().removeRequest(this);
     }
 
     public void sendResponse(ByteString message, PacketType type) {

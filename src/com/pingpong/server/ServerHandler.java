@@ -1,7 +1,6 @@
 package com.pingpong.server;
 
 import com.pingpong.core.Logger;
-import com.pingpong.manager.RequestManager;
 import com.pingpong.model.Request;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -40,7 +39,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullPacket> {
             return;
         }
         Request request = new Request(msg, ctx);
-        RequestManager.getInstance().addToQueue(request);
+        ProcessorContainer.getRequestsProcessor().addRequest(request);
     }
 
     private void sendError(int code, String message, ChannelHandlerContext channel) {

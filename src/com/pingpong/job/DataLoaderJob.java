@@ -1,13 +1,8 @@
 package com.pingpong.job;
 
 import com.pingpong.core.Logger;
-import com.pingpong.manager.CacheManager;
-import com.pingpong.manager.DatabaseManager;
 import com.pingpong.server.Config;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.pingpong.server.ProcessorContainer;
 
 /**
  * Created by tihon on 05.04.14.
@@ -46,16 +41,6 @@ public class DataLoaderJob extends Thread {
      * Clears their ping number in cache
      */
     private void doSync() {
-        List<String> pingers = DatabaseManager.getInstance().getCacheUids();    //for all pingers in cache
-        if (pingers != null) {
-            List<String> clearList = new ArrayList<>();
-            Iterator<String> it = pingers.iterator();
-            while (it.hasNext()) {
-                String uid = it.next();
-                DatabaseManager.getInstance().setPingValue(uid, CacheManager.getAndClear(uid)); //move number of pings from cache to database
-                clearList.add(uid);
-            }
-            pingers.removeAll(clearList);   //remove copied from list
-        }
+        ProcessorContainer.getLoaderProcessor().syncCache();
     }
 }

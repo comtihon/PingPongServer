@@ -1,6 +1,6 @@
 package unit;
 
-import com.pingpong.manager.CacheManager;
+import com.pingpong.storage.CacheManager;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import org.junit.Before;

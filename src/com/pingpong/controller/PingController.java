@@ -1,8 +1,8 @@
 package com.pingpong.controller;
 
-import com.pingpong.manager.CacheManager;
+import com.pingpong.storage.CacheManager;
 import com.pingpong.core.Logger;
-import com.pingpong.manager.DatabaseManager;
+import com.pingpong.storage.DatabaseManager;
 import com.pingpong.model.Request;
 import com.pingpong.packet.gen.Packet;
 
