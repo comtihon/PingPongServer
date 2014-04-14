@@ -5,30 +5,30 @@ import java.io.IOException;
 /**
  * Created by tihon on 05.04.14.
  */
-public class CacheManager extends StorageImpl {
+public class CacheManager extends Storage {
 
-    public static RedissonCache cacheImpl;
-
-    public CacheManager(Storage value) {
+    public CacheManager(StorageInt value) {
         super(value);
-        if (cacheImpl != null)
-            cacheImpl.shutdown();
-        cacheImpl = new RedissonCache();
     }
 
     @Override
-    public long get(String key) {
-        return cacheImpl.get(key);
+    public long getAndIncr(String key) {
+        return super.getAndIncr(key);
     }
 
     @Override
     public void set(String key, long value) {
-        cacheImpl.set(key, value);
+        super.set(key, value);
     }
 
     @Override
     public void terminate() throws IOException {
-        cacheImpl.shutdown();
+        super.terminate();
+    }
+
+    @Override
+    public void savePingValue(String key) {
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     /**
@@ -37,16 +37,16 @@ public class CacheManager extends StorageImpl {
      * @param key Element key
      * @return The new value
      */
-    public static long incr(String key) {
-        return cacheImpl.incr(key);
+    public long incr(String key) {
+        return super.incr(key);
     }
 
-    public static long incr(String key, long value) {
-        return cacheImpl.incr(key, value);
+    public long incr(String key, long value) {
+        return super.incr(key, value);
     }
 
-    public static long getAndClear(String key) {
-        return cacheImpl.getAndClear(key);
+    public long getAndClear(String key) {
+        return super.getAndClear(key);
     }
 
 }

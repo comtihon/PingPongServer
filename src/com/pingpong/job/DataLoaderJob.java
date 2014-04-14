@@ -7,19 +7,11 @@ import com.pingpong.server.ProcessorContainer;
 /**
  * Created by tihon on 05.04.14.
  */
-public class DataLoaderJob extends Thread {
+public class DataLoaderJob extends Thread{
 
     private final long period;
 
-    private static class SingletonHolder {
-        private static final DataLoaderJob instance = new DataLoaderJob();
-    }
-
-    public static DataLoaderJob getInstance() {
-        return SingletonHolder.instance;
-    }
-
-    private DataLoaderJob() {
+    public DataLoaderJob() {
         period = Integer.valueOf(Config.getInstance().getProperty("data_loader_period"));
     }
 
@@ -28,7 +20,7 @@ public class DataLoaderJob extends Thread {
         while (true) {
             try {
                 Thread.sleep(period);
-                Logger.d("DataLoaderJob synchronising pings");
+                Logger.i("DataLoaderJob synchronising pings");
                 doSync();
             } catch (InterruptedException e) {
                 Logger.e("DataLoaderJob interrupted! Reason:" + e.getMessage());

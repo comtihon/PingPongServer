@@ -1,34 +1,49 @@
 package com.pingpong.processor;
 
+import com.pingpong.core.Logger;
 import com.pingpong.server.ProcessorContainer;
-import com.pingpong.storage.CacheManager;
-import com.pingpong.storage.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by tihon on 14.04.14.
  */
 public class DataLoaderManager implements LoaderProcessor {
+
+    private List<String> pingers;
+
+    public DataLoaderManager() {
+        pingers = new CopyOnWriteArrayList<>();
+    }
+
     @Override
     public void syncCache() {
-        List<String> pingers = ProcessorContainer.getStorateProcessor().getCacheUids();    //for all pingers in cache
         if (pingers != null) {
             List<String> clearList = new ArrayList<>();
             Iterator<String> it = pingers.iterator();
             while (it.hasNext()) {
                 String uid = it.next();
-                DatabaseManager.getInstance().setPingValue(uid, CacheManager.getAndClear(uid)); //move number of pings from cache to database
+                ProcessorContainer.getStorateProcessor().savePingValue(uid);    //move number of pings from cache to database
                 clearList.add(uid);
             }
             pingers.removeAll(clearList);   //remove copied from list
         }
     }
 
+    /**
+     * Add connected Pinger to array. This array is used to synchronize data between
+     * database and cache.
+     *
+     * @param uid
+     */
     @Override
-    public String getName() {
-        return this.getClass().getName();
+    public void registerPinger(String uid) {
+        if (!pingers.contains(uid)) {
+            pingers.add(uid);
+            Logger.d("New pinger %s registered.", uid);
+        }
     }
 }

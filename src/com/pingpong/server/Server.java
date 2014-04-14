@@ -100,7 +100,8 @@ public class Server {
 
         try {
             Server server = Server.getInstance();   //init server
-            DataLoaderJob.getInstance().start();    //starts job ping collector
+            ProcessorContainer.getStorateProcessor();   //init cache and connect to db
+            new DataLoaderJob().start();    //starts job ping collector
             Logger.i(":::::::::::::::::::::::::::::::::::::::::::::::::::::::");
             Logger.i("Starting server on port %d. ", server.getPort());
             Logger.i("Protocol version = %d", server.getCurrentProtocolVersion());

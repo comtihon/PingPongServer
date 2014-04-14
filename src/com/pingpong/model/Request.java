@@ -3,7 +3,7 @@ package com.pingpong.model;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.pingpong.core.Logger;
-import com.pingpong.manager.PacketManager;
+import com.pingpong.controller.MainController;
 import com.pingpong.packet.gen.Error;
 import com.pingpong.packet.gen.Packet;
 import com.pingpong.packet.gen.Ping;
@@ -35,7 +35,8 @@ public class Request implements Runnable {
     @Override
     public void run() {
         try {
-            PacketManager.processPacket(this);
+            Logger.d("Request %s started processing.", toString());
+            MainController.processPacket(this);
         } catch (Exception e) {
             Logger.w("Dropped packet [%s]", toString());
             Logger.e(e.getMessage());
@@ -46,6 +47,7 @@ public class Request implements Runnable {
             sendResponse(error.toByteString(), PacketType.Error);
         }
 
+        Logger.d("Request %s finished processing.", toString());
         ProcessorContainer.getRequestsProcessor().removeRequest(this);
     }
 
@@ -77,5 +79,10 @@ public class Request implements Runnable {
 
     public PacketType getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{Request : {protocol : %d, api : %d, type : %s}}", protocol, api, type);
     }
 }

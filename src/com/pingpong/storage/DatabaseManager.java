@@ -6,23 +6,31 @@ import com.pingpong.server.Config;
 import io.orchestrate.client.*;
 
 import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tihon on 05.04.14.
  */
-public class DatabaseManager extends StorageImpl {
+public class DatabaseManager extends Storage {
 
     private final String pingerCollection;
     private final Client client;
 
-    private final CopyOnWriteArrayList<String> cacheUids;   //Uids of Pingers, that are in cache and need to be saved in database
-
     @Override
-    public long get(String key) {
-        return super.get(key);
+    public long getAndIncr(String key) {
+        long result = super.getAndIncr(key);  //getAndIncr result from cache
+        Logger.d("Result from cache %d", result);
+        if (result == 1) {  //cache record is new. Search database for old ping values
+            long pingsFromDb = loadPingValue(key);
+            Logger.d("Result from db  " + pingsFromDb);
+            if (pingsFromDb > 0) {
+                super.incr(key, pingsFromDb + 1);    //updates cache with database info
+                result += pingsFromDb;
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -35,7 +43,7 @@ public class DatabaseManager extends StorageImpl {
         client.stop();
     }
 
-    public DatabaseManager(Storage component) {
+    public DatabaseManager(StorageInt component) {
         super(component);
         String apiKey = Config.getInstance().getProperty("db_api_key");
         pingerCollection = Config.getInstance().getProperty("db_ping_collection");
@@ -43,24 +51,26 @@ public class DatabaseManager extends StorageImpl {
                 || pingerCollection == null || pingerCollection.isEmpty())
             throw new RuntimeException("Orchestrate db is not configured correctly!");
         client = new ClientBuilder(apiKey).build();
-        cacheUids = new CopyOnWriteArrayList<>();
     }
 
     /**
-     * Add connected Pinger to array. This array is used by DataLoaderJob to synchronize data between
-     * database and cache.
+     * Save pings number to database. Is called only by DataLoaderJob
      *
-     * @param uid
+     * @param key Pinger's uid
      */
-    public void addPinger(String uid) {
-        if (cacheUids != null) {
-            if (!cacheUids.contains(uid))
-                cacheUids.add(uid);
-        }
-    }
+    @Override
+    public void savePingValue(String key) {
+        if (client == null)
+            return;
 
-    public CopyOnWriteArrayList<String> getCacheUids() {
-        return cacheUids;
+        long value = super.getAndClear(key);
+
+        Logger.i("Save %d for %s to DB", value, key);
+        KvStoreOperation kvStoreOp = new KvStoreOperation(pingerCollection, key, toJson(value));
+        client.execute(kvStoreOp);    // execute the operation
+
+        // execute the operation
+        client.execute(kvStoreOp);
     }
 
     /**
@@ -69,8 +79,8 @@ public class DatabaseManager extends StorageImpl {
      * @param key Pinger's uid to search for
      * @return pings number of 0
      */
-    public long getPingValue(String key) {
-        if (pingerCollection == null || key == null)
+    public long loadPingValue(String key) {
+        if (key == null)
             return 0;
         KvFetchOperation<String> kvFetchOp = new KvFetchOperation<>(pingerCollection, key, String.class);
 
@@ -82,27 +92,6 @@ public class DatabaseManager extends StorageImpl {
             Logger.w("Error during waiting for Orchestrate. Reason:" + e.getMessage());
         }
         return kvObject == null ? 0 : fromJson(kvObject.getValue());
-    }
-
-    /**
-     * Save pings number to database. Is called only by DataLoaderJob
-     *
-     * @param key   Pinger's uid
-     * @param value number of pings from cache
-     */
-    public void setPingValue(String key, long value) {
-        if (client == null)
-            return;
-        KvStoreOperation kvStoreOp = new KvStoreOperation(pingerCollection, key, toJson(value));
-        client.execute(kvStoreOp);    // execute the operation
-
-        // execute the operation
-        client.execute(kvStoreOp);
-    }
-
-    public void stopClient() throws IOException {
-        if (client != null)
-            client.stop();
     }
 
     private String toJson(long value) {

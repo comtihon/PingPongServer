@@ -1,10 +1,10 @@
 package com.pingpong.server;
 
-import com.pingpong.processor.*;
-import com.pingpong.storage.CacheManager;
-import com.pingpong.storage.DatabaseManager;
-import com.pingpong.storage.RedissonCache;
-import com.pingpong.storage.Storage;
+import com.pingpong.processor.DataLoaderManager;
+import com.pingpong.processor.LoaderProcessor;
+import com.pingpong.processor.RequestManager;
+import com.pingpong.processor.RequestsProcessor;
+import com.pingpong.storage.*;
 
 /**
  * Created by tihon on 14.04.14.
@@ -29,7 +29,7 @@ public class ProcessorContainer {
 
     public static Storage getStorateProcessor() {
         if (storProc == null) {
-            Storage redisson = new RedissonCache();
+            StorageInt redisson = new RedissonCache();
             Storage cache = new CacheManager(redisson);
             storProc = new DatabaseManager(cache);
         }

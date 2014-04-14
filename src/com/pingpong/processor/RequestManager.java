@@ -61,9 +61,4 @@ public class RequestManager implements RequestsProcessor {
             poolExecutor.remove(packet);
         }
     }
-
-    @Override
-    public String getName() {
-        return this.getClass().getName();
-    }
 }
